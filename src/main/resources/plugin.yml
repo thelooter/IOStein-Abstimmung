@@ -1,0 +1,11 @@
+name: IOSteinPolls
+version: '${project.version}'
+main: eu.thelooter.iosteinpolls.IOSteinPolls
+api-version: 1.18
+authors: [ thelooter ]
+
+commands:
+  poll:
+    description: "Create polls"
+    usage: /poll <option>
+    aliases: [polls]
