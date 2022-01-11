@@ -1,8 +1,9 @@
 name: IOSteinPolls
 version: '${project.version}'
-main: eu.thelooter.iosteinpolls.IOSteinPolls
+main: de.thelooter.iosteinpolls.IOSteinPolls
 api-version: 1.18
 authors: [ thelooter ]
+depend: ["ProtocolLib"]
 
 commands:
   poll:

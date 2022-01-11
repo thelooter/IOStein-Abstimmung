@@ -1,10 +1,11 @@
-package eu.thelooter.iosteinpolls.database;
+package de.thelooter.iosteinpolls.database;
 
-import eu.thelooter.iosteinpolls.IOSteinPolls;
+import de.thelooter.iosteinpolls.IOSteinPolls;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DatabaseProvider {
@@ -12,17 +13,17 @@ public class DatabaseProvider {
     private final Connection connection;
     private final IOSteinPolls plugin;
 
-    private File databaseFile;
-
     public DatabaseProvider() {
         this.plugin = IOSteinPolls.getInstance();
         this.connection = connect();
+
+        createTables();
 
         if(!plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdir();
         }
 
-        this.databaseFile = new File(plugin.getDataFolder(), "database.db");
+        File databaseFile = new File(plugin.getDataFolder(), "database.db");
 
         if (!databaseFile.exists()) {
             plugin.saveResource(plugin.getDataFolder() + "/database.db", false);
@@ -43,6 +44,17 @@ public class DatabaseProvider {
 
         }
         return null;
+    }
+
+    public void createTables() {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `polls` " +
+                    "(question TEXT, duration INTEGER,access INTEGER, creator TEXT,positive_answer TEXT, negative_answer TEXT, positive_votes INTEGER, negative_votes INTEGER)");
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isConnecced() {

@@ -1,10 +1,7 @@
-package eu.thelooter.iosteinpolls.commands.pollcommand;
+package de.thelooter.iosteinpolls.commands.pollcommand;
 
-import eu.thelooter.iosteinpolls.IOSteinPolls;
-import eu.thelooter.iosteinpolls.commands.pollcommand.subcommands.PollCreateSubCommand;
-import eu.thelooter.iosteinpolls.commands.pollcommand.subcommands.PollDeleteSubCommand;
-import eu.thelooter.iosteinpolls.commands.pollcommand.subcommands.PollEndSubCommand;
-import eu.thelooter.iosteinpolls.commands.pollcommand.subcommands.PollStatusSubCommand;
+import de.thelooter.iosteinpolls.IOSteinPolls;
+import de.thelooter.iosteinpolls.commands.pollcommand.subcommands.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,40 +17,49 @@ public class PollCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            //TODO add Submission GUI
+            new PollSubmissionSubCommand(player);
+            return true;
         }
+
 
         if (args.length == 1) {
             switch (args[0]) {
-                case "create":
+                case "create" -> {
                     if (!player.hasPermission("iosteinpolls.create")) {
                         player.sendMessage("You don't have permission to create a poll!");
                         return true;
                     }
                     new PollCreateSubCommand(player);
-                    //TODO create poll create GUI
-                    break;
-                case "end":
+                    return true;
+                }
+                //TODO create poll create GUI
+                case "end" -> {
                     if (!player.hasPermission("iosteinpolls.end")) {
                         player.sendMessage("You don't have permission to end a poll!");
+                        return true;
                     }
                     new PollEndSubCommand(player);
-                    //TODO end Poll
-                    break;
-                case "delete":
+                    return true;
+                }
+                //TODO end Poll
+                case "delete" -> {
                     if (!player.hasPermission("iosteinpolls.delete")) {
                         player.sendMessage("You don't have permission to delete a poll!");
+                        return true;
                     }
                     new PollDeleteSubCommand(player);
-                    //TODO Delete Poll
-                    break;
-                case "status":
+                    return true;
+                }
+                //TODO Delete Poll
+                case "status" -> {
                     if (!player.hasPermission("iosteinpolls.status")) {
                         player.sendMessage("You don't have permission to see the status of a poll!");
+                        return true;
                     }
                     new PollStatusSubCommand(player);
-                    //TODO create poll status GUI
-                    break;
+                    return true;
+                }
+                //TODO create poll status GUI
             }
         }
         return false;

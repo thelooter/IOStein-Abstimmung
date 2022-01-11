@@ -1,4 +1,4 @@
-package eu.thelooter.iosteinpolls.commands.pollcommand.subcommands;
+package de.thelooter.iosteinpolls.commands.pollcommand.subcommands;
 
 import org.bukkit.entity.Player;
 

@@ -1,6 +1,6 @@
-package eu.thelooter.iosteinpolls.commands.pollcommand.subcommands;
+package de.thelooter.iosteinpolls.commands.pollcommand.subcommands;
 
-import eu.thelooter.iosteinpolls.inventories.PollCreateInventory;
+import de.thelooter.iosteinpolls.inventories.PollCreateInventory;
 import org.bukkit.entity.Player;
 
 public class PollCreateSubCommand {

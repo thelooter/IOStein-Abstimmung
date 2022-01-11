@@ -1,4 +1,4 @@
-package eu.thelooter.iosteinpolls.util.items;
+package de.thelooter.iosteinpolls.util.items;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
