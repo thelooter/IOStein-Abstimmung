@@ -5,6 +5,7 @@ import de.thelooter.iosteinpolls.inventories.PollQuestionInventory;
 import de.thelooter.iosteinpolls.inventories.signs.PollAnswerInventory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,7 @@ public class InventoryEvents implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
 
 
-        Player player = (Player)event.getWhoClicked();
+        Player player = (Player) event.getWhoClicked();
 
         //Components
         final Component titleComponent = event.getView().title();
@@ -38,15 +39,17 @@ public class InventoryEvents implements Listener {
                 case BLACK_STAINED_GLASS_PANE -> event.setCancelled(true);
                 case OAK_SIGN -> {
                     event.setCancelled(true);
-                    new PollAnswerInventory((Player) player);
+                    Bukkit.getScheduler().runTask(IOSteinPolls.getInstance(), () -> new PollAnswerInventory(player));
                 }
                 case PAPER -> {
                     event.setCancelled(true);
-                    new PollQuestionInventory(IOSteinPolls.getInstance()).createPollQuestionInventory(player);
+                    Bukkit.getScheduler().runTask(IOSteinPolls.getInstance(), () ->
+                            new PollQuestionInventory(IOSteinPolls.getInstance()).createPollQuestionInventory(player));
                 }
-/*                case LIME_DYE -> //TODO Access
-                case RED_DYE -> //TODO Access
-                case CLOCK -> //TODO DUration*/
+                case LIME_DYE, RED_DYE, CLOCK, PLAYER_HEAD -> {
+                    event.setCancelled(true);
+                }
+
             }
         }
     }

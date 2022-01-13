@@ -1,5 +1,7 @@
 package de.thelooter.iosteinpolls;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import de.thelooter.iosteinpolls.commands.pollcommand.PollCommand;
 import de.thelooter.iosteinpolls.database.DatabaseProvider;
 import de.thelooter.iosteinpolls.events.InventoryEvents;
@@ -19,9 +21,11 @@ public final class IOSteinPolls extends JavaPlugin {
 
     private Poll currentPoll;
 
+    private ProtocolManager manager;
 
     @Override
     public void onEnable() {
+
 
 
 
@@ -31,6 +35,9 @@ public final class IOSteinPolls extends JavaPlugin {
         connection = new DatabaseProvider().getConnection();
 
         pollManager = new PollManager(this);
+        currentPoll = new Poll();
+
+        manager = ProtocolLibrary.getProtocolManager();
 
         //Command Registration
         getCommand("poll").setExecutor(new PollCommand());
@@ -59,4 +66,7 @@ public final class IOSteinPolls extends JavaPlugin {
         return currentPoll;
     }
 
+    public ProtocolManager getManager() {
+        return manager;
+    }
 }

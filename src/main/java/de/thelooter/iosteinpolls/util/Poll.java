@@ -24,7 +24,9 @@ public class Poll {
         this.negativeVotes = negativeVotes;
     }
 
+    public Poll() {
 
+    }
 
     public Player getCreator() {
         return creator;
