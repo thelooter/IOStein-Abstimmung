@@ -1,5 +1,6 @@
 package de.thelooter.iosteinpolls.inventories;
 
+import de.thelooter.iosteinpolls.IOSteinPolls;
 import de.thelooter.iosteinpolls.util.items.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -13,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class PollSubmissionInventory {
 
-    private final TextComponent INVENTORY_TITLE = LegacyComponentSerializer.legacy('§').deserialize("§8» §6&lAbstimmung");
+    private final TextComponent INVENTORY_TITLE = LegacyComponentSerializer.legacy('§').deserialize("§8» §6§lAbstimmung");
 
     public Inventory createPollSubmissionInventory(Player player) {
         Inventory inventory = Bukkit.createInventory(player, 3 * 9, INVENTORY_TITLE);
@@ -24,17 +25,17 @@ public class PollSubmissionInventory {
 
         ItemStack yes = new ItemBuilder(Material.LIME_TERRACOTTA)
                 .setName(LegacyComponentSerializer.legacy('§').deserialize("§aJa!").decoration(TextDecoration.ITALIC, false))
-                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§7Stimme hiermit für &aJa §7ab"))
+                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§7Stimme hiermit für §a " +IOSteinPolls.getInstance().getCurrentPoll().getPositiveAnswer() + " §7ab"))
                 .toItemStack();
 
         ItemStack no = new ItemBuilder(Material.RED_TERRACOTTA)
                 .setName(LegacyComponentSerializer.legacy('§').deserialize("§cNein!").decoration(TextDecoration.ITALIC, false))
-                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§7Stimme hiermit für &cNein §7ab"))
+                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§7Stimme hiermit für §c" + IOSteinPolls.getInstance().getCurrentPoll().getNegativeAnswer() +" §7ab"))
                 .toItemStack();
 
         ItemStack question = new ItemBuilder(Material.PAPER)
                 .setName(LegacyComponentSerializer.legacy('§').deserialize("§7Frage:").decoration(TextDecoration.ITALIC, false))
-                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§7{Abstimmungsfrage}"))
+                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§7" + IOSteinPolls.getInstance().getCurrentPoll().getQuestion()))
                 .toItemStack();
 
         for (int i = 0; i < inventory.getSize(); i++) {

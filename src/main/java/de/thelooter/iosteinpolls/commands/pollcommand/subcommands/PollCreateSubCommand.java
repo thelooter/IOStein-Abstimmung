@@ -13,6 +13,7 @@ public class PollCreateSubCommand {
 
         player.openInventory(new PollCreateInventory().createPollCreateInventory(player));
 
+
         //TODO Open Create Poll GUI
     }
 }

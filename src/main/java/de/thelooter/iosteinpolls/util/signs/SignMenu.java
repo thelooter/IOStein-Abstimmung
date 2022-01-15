@@ -6,6 +6,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import de.thelooter.iosteinpolls.IOSteinPolls;
+import de.thelooter.iosteinpolls.inventories.PollCreateInventory;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,6 +30,7 @@ public class SignMenu {
 
     public SignMenu(Player player) {
         this.player = player;
+        listen();
     }
 
     public void openSignMenu() {
@@ -54,7 +57,7 @@ public class SignMenu {
             e.printStackTrace();
         }
 
-        listen();
+
     }
 
     private void listen() {
@@ -70,11 +73,20 @@ public class SignMenu {
                 if (signLocation.equals(position.toLocation(event.getPlayer().getWorld()))) {
                     if (secondPage) {
                         IOSteinPolls.getInstance().getCurrentPoll().setNegativeAnswer(event.getPacket().getStringArrays().read(0)[0]);
+                        IOSteinPolls.getInstance().getPollManager().setNegativeAnswer(IOSteinPolls.getInstance().getCurrentPoll(), event.getPacket().getStringArrays().getValues().get(0)[0]);
                         player.sendBlockChange(position.toLocation(player.getWorld()), Material.AIR.createBlockData());
 
-                        secondPage = false;
+                        openInvs.remove(event.getPlayer());
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                            player.openInventory(new PollCreateInventory().createPollCreateInventory(player));
+
+                        }, 2);
+
+
                     } else {
                         IOSteinPolls.getInstance().getCurrentPoll().setPositiveAnswer(event.getPacket().getStringArrays().read(0)[0]);
+                        IOSteinPolls.getInstance().getPollManager().setPositiveAnswer(IOSteinPolls.getInstance().getCurrentPoll(), event.getPacket().getStringArrays().getValues().get(0)[0]);
+
                         player.sendBlockChange(position.toLocation(player.getWorld()), Material.AIR.createBlockData());
 
                         secondPage = true;

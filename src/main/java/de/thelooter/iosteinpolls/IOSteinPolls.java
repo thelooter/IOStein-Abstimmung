@@ -3,8 +3,11 @@ package de.thelooter.iosteinpolls;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import de.thelooter.iosteinpolls.commands.pollcommand.PollCommand;
+import de.thelooter.iosteinpolls.commands.pollcommand.PollCommandCompleter;
 import de.thelooter.iosteinpolls.database.DatabaseProvider;
 import de.thelooter.iosteinpolls.events.InventoryEvents;
+import de.thelooter.iosteinpolls.events.PollCreateInventoryListener;
+import de.thelooter.iosteinpolls.events.PollSubmissionInventoryListener;
 import de.thelooter.iosteinpolls.manager.PollManager;
 import de.thelooter.iosteinpolls.util.Poll;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,14 +23,12 @@ public final class IOSteinPolls extends JavaPlugin {
     private PollManager pollManager;
 
     private Poll currentPoll;
+    private Poll finishedPoll;
 
     private ProtocolManager manager;
 
     @Override
     public void onEnable() {
-
-
-
 
 
         instance = this;
@@ -42,8 +43,15 @@ public final class IOSteinPolls extends JavaPlugin {
         //Command Registration
         getCommand("poll").setExecutor(new PollCommand());
 
+        //Tab Completer Registration
+        getCommand("poll").setTabCompleter(new PollCommandCompleter());
+
         //Event Listener Registration
         getServer().getPluginManager().registerEvents(new InventoryEvents(), this);
+        getServer().getPluginManager().registerEvents(new PollCreateInventoryListener(), this);
+        getServer().getPluginManager().registerEvents(new PollSubmissionInventoryListener(), this);
+
+
     }
 
     @Override
@@ -54,7 +62,7 @@ public final class IOSteinPolls extends JavaPlugin {
         return instance;
     }
 
-    public  Connection getConnection() {
+    public Connection getConnection() {
         return connection;
     }
 

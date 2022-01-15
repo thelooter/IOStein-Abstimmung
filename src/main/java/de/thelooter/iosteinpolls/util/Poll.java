@@ -1,20 +1,23 @@
 package de.thelooter.iosteinpolls.util;
 
+import de.thelooter.iosteinpolls.IOSteinPolls;
+import de.thelooter.iosteinpolls.manager.PollManager;
 import org.bukkit.entity.Player;
 
-import java.util.Objects;
+public final class Poll {
+    private Player creator;
+    private String question;
+    private int duration = 0;
+    private String positiveAnswer;
+    private String negativeAnswer;
+    private int positiveVotes;
+    private int negativeVotes;
+    private boolean onlyTeamAccess = false;
 
-public class Poll {
-    private  Player creator;
-    private  String question;
-    private  int duration;
-    private  String positiveAnswer;
-    private  String negativeAnswer;
-    private  int positiveVotes;
-    private  int negativeVotes;
+    private PollManager pollManager;
 
     public Poll(Player creator, String question, int duration, String positiveAnswer, String negativeAnswer,
-                int positiveVotes, int negativeVotes) {
+                int positiveVotes, int negativeVotes, IOSteinPolls plugin) {
         this.creator = creator;
         this.question = question;
         this.duration = duration;
@@ -22,6 +25,8 @@ public class Poll {
         this.negativeAnswer = negativeAnswer;
         this.positiveVotes = positiveVotes;
         this.negativeVotes = negativeVotes;
+
+        pollManager = new PollManager(plugin);
     }
 
     public Poll() {
@@ -58,61 +63,72 @@ public class Poll {
 
     public void setCreator(Player creator) {
         this.creator = creator;
+        pollManager.setCreator(this, creator);
     }
 
     public void setQuestion(String question) {
         this.question = question;
+        pollManager.setQuestion(this, question);
     }
 
     public void setDuration(int duration) {
         this.duration = duration;
+        pollManager.setDuration(this, duration);
     }
 
     public void setPositiveAnswer(String positiveAnswer) {
         this.positiveAnswer = positiveAnswer;
+        pollManager.setPositiveAnswer(this, positiveAnswer);
     }
 
     public void setNegativeAnswer(String negativeAnswer) {
         this.negativeAnswer = negativeAnswer;
+        pollManager.setNegativeAnswer(this, negativeAnswer);
+
     }
 
     public void setPositiveVotes(int positiveVotes) {
         this.positiveVotes = positiveVotes;
+        pollManager.setPositiveVotes(this, positiveVotes);
+
     }
 
     public void setNegativeVotes(int negativeVotes) {
         this.negativeVotes = negativeVotes;
+        pollManager.setNegativeVotes(this, negativeVotes);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Poll) obj;
-        return Objects.equals(this.creator, that.creator) &&
-                Objects.equals(this.question, that.question) &&
-                this.duration == that.duration &&
-                Objects.equals(this.positiveAnswer, that.positiveAnswer) &&
-                Objects.equals(this.negativeAnswer, that.negativeAnswer) &&
-                this.positiveVotes == that.positiveVotes &&
-                this.negativeVotes == that.negativeVotes;
+    public boolean isOnlyTeamAccess() {
+        return onlyTeamAccess;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(creator, question, duration, positiveAnswer, negativeAnswer, positiveVotes, negativeVotes);
+    public void setOnlyTeamAccess(boolean onlyTeamAccess) {
+        this.onlyTeamAccess = onlyTeamAccess;
+        pollManager.setAccess(this, onlyTeamAccess);
     }
 
-    @Override
-    public String toString() {
-        return "Poll[" +
-                "creator=" + creator + ", " +
-                "question=" + question + ", " +
-                "duration=" + duration + ", " +
-                "positiveAnswer=" + positiveAnswer + ", " +
-                "negativeAnswer=" + negativeAnswer + ", " +
-                "positiveVotes=" + positiveVotes + ", " +
-                "negativeVotes=" + negativeVotes + ']';
+    public void addVote(boolean positive) {
+        if (positive) {
+            positiveVotes++;
+            pollManager.submitVote(this, true);
+        } else {
+            negativeVotes++;
+            pollManager.submitVote(this, false);
+
+        }
+    }
+
+    public void delete() {
+        pollManager.deletePoll(this);
+        this.question = null;
+        this.creator = null;
+        this.duration = 0;
+        this.positiveAnswer = null;
+        this.negativeAnswer = null;
+        this.positiveVotes = 0;
+        this.negativeVotes = 0;
+        this.onlyTeamAccess = false;
+
     }
 
 }

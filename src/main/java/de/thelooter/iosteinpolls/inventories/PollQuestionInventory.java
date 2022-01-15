@@ -35,9 +35,11 @@ public class PollQuestionInventory {
                 return AnvilGUI.Response.text("Du musst eine Frage eingeben");
             }
             plugin.getCurrentPoll().setQuestion(text);
+            plugin.getPollManager().setQuestion(plugin.getCurrentPoll(), text);
+
 
             plugin.getCurrentPoll().setCreator(player);
-            System.out.println(plugin.getCurrentPoll().getQuestion());
+
             return AnvilGUI.Response.openInventory(new PollCreateInventory().createPollCreateInventory(player));
         });
 
