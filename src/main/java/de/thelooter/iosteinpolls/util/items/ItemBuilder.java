@@ -107,14 +107,13 @@ public class ItemBuilder {
      * Set the skull owner for the item. Works on skulls only.
      * @param owner The name of the skull's owner.
      */
-    public ItemBuilder setSkullOwner(String owner){
-        try{
-            SkullMeta im = (SkullMeta)is.getItemMeta();
+    public ItemBuilder setSkullOwner(String owner) throws ClassCastException{
+            SkullMeta im = (SkullMeta) is.getItemMeta();
             im.setOwner(owner);
             is.setItemMeta(im);
-        }catch(ClassCastException expected){}
         return this;
     }
+
     /**
      * Add an enchant to the item.
      * @param ench The enchant to add
@@ -126,6 +125,7 @@ public class ItemBuilder {
         is.setItemMeta(im);
         return this;
     }
+
     /**
      * Add multiple enchants at once.
      * @param enchantments The enchants to add.

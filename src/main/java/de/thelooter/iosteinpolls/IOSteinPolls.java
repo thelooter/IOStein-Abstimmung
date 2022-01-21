@@ -11,8 +11,11 @@ import de.thelooter.iosteinpolls.events.PollStatusInventoryListener;
 import de.thelooter.iosteinpolls.events.PollSubmissionInventoryListener;
 import de.thelooter.iosteinpolls.manager.PollManager;
 import de.thelooter.iosteinpolls.util.Poll;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
+import java.io.File;
 import java.sql.Connection;
 
 public final class IOSteinPolls extends JavaPlugin {
@@ -28,6 +31,16 @@ public final class IOSteinPolls extends JavaPlugin {
 
 
     private ProtocolManager manager;
+
+    public IOSteinPolls()
+    {
+        super();
+    }
+
+    protected IOSteinPolls(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file)
+    {
+        super(loader, description, dataFolder, file);
+    }
 
     @Override
     public void onEnable() {
