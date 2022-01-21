@@ -6,5 +6,6 @@ import org.bukkit.entity.Player;
 public class PollDeleteSubCommand {
     public PollDeleteSubCommand(Player player) {
         IOSteinPolls.getInstance().getCurrentPoll().delete();
+        IOSteinPolls.getInstance().getPollManager().clearPlayers();
     }
 }

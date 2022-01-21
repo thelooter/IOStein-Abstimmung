@@ -33,11 +33,14 @@ public class PollSubmissionInventoryListener implements Listener {
                     event.setCancelled(true);
                     IOSteinPolls.getInstance().getCurrentPoll().addVote(true);
                     player.closeInventory();
-                    player.sendMessage("");
+                    player.sendMessage("§eDu hast für §a" + IOSteinPolls.getInstance().getCurrentPoll().getPositiveAnswer() + " §egestimmt");
                                     }
                 case RED_TERRACOTTA -> {
                     event.setCancelled(true);
                     IOSteinPolls.getInstance().getCurrentPoll().addVote(false);
+                    player.closeInventory();
+                    player.sendMessage("§eDu hast für §c" + IOSteinPolls.getInstance().getCurrentPoll().getNegativeAnswer() + " §egestimmt");
+
 
                 }
             }
