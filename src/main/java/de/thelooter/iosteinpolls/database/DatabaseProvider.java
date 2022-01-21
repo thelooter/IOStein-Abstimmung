@@ -2,8 +2,6 @@ package de.thelooter.iosteinpolls.database;
 
 import de.thelooter.iosteinpolls.IOSteinPolls;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,23 +15,7 @@ public class DatabaseProvider {
     public DatabaseProvider() {
         this.plugin = IOSteinPolls.getInstance();
 
-
-
-        if(!plugin.getDataFolder().exists()) {
-            plugin.getDataFolder().mkdir();
-        }
-
-        File databaseFile = new File(plugin.getDataFolder(), "database.db");
-
-        if (!databaseFile.exists()) {
-            try {
-                boolean created = databaseFile.createNewFile();
-                plugin.getLogger().info("Created new database file: " + created);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            plugin.saveResource(plugin.getDataFolder() + "/database.db", false);
-        }
+        plugin.saveResource("database.db",false);
 
         this.connection = connect();
 

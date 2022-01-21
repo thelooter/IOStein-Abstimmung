@@ -34,7 +34,7 @@ public class StringUtils {
     }
 
 
-    private static class MinecraftFontWidthCalculator {
+    public static class MinecraftFontWidthCalculator {
 
         private static final int DEFAULT_WIDTH = 5;
 

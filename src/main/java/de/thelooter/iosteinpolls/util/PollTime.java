@@ -19,7 +19,11 @@ public enum PollTime {
         this.loreString = loreString;
     }
 
+    public int getTicks() {
+        return ticks;
+    }
 
-
-
+    public String getLoreString() {
+        return loreString;
+    }
 }
