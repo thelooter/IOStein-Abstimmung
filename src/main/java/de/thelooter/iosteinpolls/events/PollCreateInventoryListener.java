@@ -4,8 +4,11 @@ import de.thelooter.iosteinpolls.IOSteinPolls;
 import de.thelooter.iosteinpolls.inventories.PollQuestionInventory;
 import de.thelooter.iosteinpolls.inventories.signs.PollAnswerInventory;
 import de.thelooter.iosteinpolls.util.PollTime;
+import de.thelooter.iosteinpolls.util.StringUtils;
 import de.thelooter.iosteinpolls.util.items.ItemBuilder;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +17,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PollCreateInventoryListener implements Listener {
 
@@ -77,31 +83,65 @@ public class PollCreateInventoryListener implements Listener {
                 case PLAYER_HEAD -> {
                     event.setCancelled(true);
 
+                    if (IOSteinPolls.getInstance().getCurrentPoll().getQuestion() == null
+                            || IOSteinPolls.getInstance().getCurrentPoll().getPositiveAnswer() == null
+                            || IOSteinPolls.getInstance().getCurrentPoll().getNegativeAnswer() == null) {
+                        player.closeInventory();
+                        player.sendMessage("§cDu hast vergessen alle Werte auszufüllen. Versuche es noch einmal!");
+                        return;
+                    }
+
                     IOSteinPolls.getInstance().getCurrentPoll().setCreator(player);
+
                     IOSteinPolls.getInstance().getPollManager().createPoll(IOSteinPolls.getInstance().getCurrentPoll());
 
+                    int id = IOSteinPolls.getInstance().getPollManager().startPollTimer(IOSteinPolls.getInstance().getCurrentPoll());
+
+                    IOSteinPolls.getInstance().getCurrentPoll().setTaskID(id);
+
+                    List<String> messageStrings = new ArrayList<>();
+                    messageStrings.add("§7§l--------------------------");
+                    messageStrings.add("");
+                    messageStrings.add("§6Abstimmung");
+                    messageStrings.add("§evon §c" + IOSteinPolls.getInstance().getCurrentPoll().getCreator().getName());
+                    messageStrings.add("");
+                    messageStrings.add(IOSteinPolls.getInstance().getCurrentPoll().getQuestion());
+                    messageStrings.add("");
+                    messageStrings.add("§e[Klicke zum Abstimmen]");
+                    messageStrings.add("");
+                    messageStrings.add("§7§l--------------------------");
+
+                    List<String> paddedString = StringUtils.pad(messageStrings);
+
+
+
+                    List<TextComponent> messageComponents = new ArrayList<>();
+
+                    for (String messageString : paddedString) {
+
+                        if (messageString.contains("§e[Klicke zum Abstimmen]")) {
+                            messageComponents.add(LegacyComponentSerializer.legacy('§').deserialize(messageString)
+                                    .clickEvent(ClickEvent.runCommand("/poll")));
+                            continue;
+                        }
+                        messageComponents.add(LegacyComponentSerializer.legacy('§').deserialize(messageString));
+
+                    }
+
                     if (IOSteinPolls.getInstance().getCurrentPoll().isOnlyTeamAccess()) {
-                        System.out.println("YAAA");
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("§7▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"), "iostein.polls.team");
-                        Bukkit.broadcast(Component.empty(), "iostein.polls.team");
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("               §6Abstimmung"), "iostein.polls.team");
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("§evon §c" + IOSteinPolls.getInstance().getCurrentPoll().getCreator().getName()), "iostein.polls.team");
-                        Bukkit.broadcast(Component.empty(), "iostein.polls.team");
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize(IOSteinPolls.getInstance().getCurrentPoll().getQuestion()), "iostein.polls.team");
-                        Bukkit.broadcast(Component.empty(), "iostein.polls.team");
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("§e{Klicke zum Abstimmen"), "iostein.polls.team");
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("§7▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"), "iostein.polls.team");
+                        for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
+                            if (loopPlayer.hasPermission("iostein.polls.team")) {
+                                for (TextComponent messageComponent : messageComponents) {
+                                    loopPlayer.sendMessage(messageComponent);
+                                }
+                            }
+                        }
                     } else {
-                        System.out.println("NOOOO");
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("§7▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"));
-                        Bukkit.broadcast(Component.empty());
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("               §6Abstimmung"));
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("             §evon §c" + IOSteinPolls.getInstance().getCurrentPoll().getCreator().getName()));
-                        Bukkit.broadcast(Component.empty());
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize(IOSteinPolls.getInstance().getCurrentPoll().getQuestion()));
-                        Bukkit.broadcast(Component.empty(), "iostein.polls.team");
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("        §e[Klicke zum Abstimmen]"));
-                        Bukkit.broadcast(LegacyComponentSerializer.legacy('§').deserialize("§7▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"));
+                        for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
+                            for (TextComponent messageComponent : messageComponents) {
+                                loopPlayer.sendMessage(messageComponent);
+                            }
+                        }
                     }
 
 
@@ -112,7 +152,6 @@ public class PollCreateInventoryListener implements Listener {
                     event.setCancelled(true);
 
                     IOSteinPolls.getInstance().getCurrentPoll().setOnlyTeamAccess(true);
-                    IOSteinPolls.getInstance().getPollManager().setAccess(IOSteinPolls.getInstance().getCurrentPoll(), true);
 
                     ItemStack teamAccess = new ItemBuilder(Material.RED_DYE)
                             .setName(LegacyComponentSerializer.legacy('§').deserialize("§8» §cZugriff"))
@@ -123,15 +162,12 @@ public class PollCreateInventoryListener implements Listener {
                     event.getView().getTopInventory().setItem(event.getSlot(), teamAccess);
 
 
-
-
                 }
                 case RED_DYE -> {
 
                     event.setCancelled(true);
 
                     IOSteinPolls.getInstance().getCurrentPoll().setOnlyTeamAccess(false);
-                    IOSteinPolls.getInstance().getPollManager().setAccess(IOSteinPolls.getInstance().getCurrentPoll(), false);
 
                     ItemStack teamAccess = new ItemBuilder(Material.LIME_DYE)
                             .setName(LegacyComponentSerializer.legacy('§').deserialize("§8» §aZugriff"))
@@ -140,8 +176,7 @@ public class PollCreateInventoryListener implements Listener {
                             .toItemStack();
 
 
-
-                    event.getView().getTopInventory().setItem(event.getSlot(), teamAccess);
+                    event.getView().getTopInventory().setItem(event.getSlot(), teamAccess) ;
                 }
 
             }

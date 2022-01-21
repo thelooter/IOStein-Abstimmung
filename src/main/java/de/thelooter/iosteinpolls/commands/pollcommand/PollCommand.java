@@ -2,7 +2,7 @@ package de.thelooter.iosteinpolls.commands.pollcommand;
 
 import de.thelooter.iosteinpolls.IOSteinPolls;
 import de.thelooter.iosteinpolls.commands.pollcommand.subcommands.*;
-import de.thelooter.iosteinpolls.inventories.PollResultInventory;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,10 +18,7 @@ public class PollCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            if (IOSteinPolls.getInstance().getCurrentPoll().getQuestion() == null) {
-                sender.sendMessage("§cAktuell läuft keine Umfrage!");
-                return true;
-            }
+
             new PollSubmissionSubCommand(player);
             return true;
         }
@@ -69,18 +66,15 @@ public class PollCommand implements CommandExecutor {
                         player.sendMessage("You don't have permission to see the results of a poll!");
                         return true;
                     }
-                    new PollResultInventory().createPollResultInventory(player);
+                    new PollResultSubCommand(player);
+                    return true;
+                }
+                default -> {
+                    player.sendMessage(LegacyComponentSerializer.legacy('§').deserialize("§cDiesen Command gibt es nicht!"));
+                    return true;
                 }
 
-                case "info" -> {
-                    if (!player.hasPermission("iosteinpolls.info")) {
-                        player.sendMessage("You don't have permission to see the info of a poll!");
-                        return true;
-                    }
-                    player.sendMessage(String.valueOf(IOSteinPolls.getInstance().getCurrentPoll().isOnlyTeamAccess()));
 
-                }
-                //TODO create poll status GUI
             }
         }
         return false;

@@ -11,8 +11,8 @@ public enum PollTime {
     TWO_HOURS(142000,"2 Stunden"); //7
 
 
-    public int ticks;
-    public String loreString;
+    public final int ticks;
+    public final String loreString;
 
     PollTime(int ticks, String loreString) {
         this.ticks = ticks;

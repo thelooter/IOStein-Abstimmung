@@ -2,9 +2,10 @@ package de.thelooter.iosteinpolls.util;
 
 import de.thelooter.iosteinpolls.IOSteinPolls;
 import de.thelooter.iosteinpolls.manager.PollManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public final class Poll {
+public final class Poll implements Cloneable {
     private Player creator;
     private String question;
     private int duration = 0;
@@ -14,7 +15,9 @@ public final class Poll {
     private int negativeVotes;
     private boolean onlyTeamAccess = false;
 
-    private PollManager pollManager;
+    private int taskID = 0;
+
+    private final PollManager pollManager;
 
     public Poll(Player creator, String question, int duration, String positiveAnswer, String negativeAnswer,
                 int positiveVotes, int negativeVotes, IOSteinPolls plugin) {
@@ -29,8 +32,20 @@ public final class Poll {
         pollManager = new PollManager(plugin);
     }
 
-    public Poll() {
+    public Poll(Poll poll, IOSteinPolls plugin) {
+        this.creator = poll.getCreator();
+        this.question = poll.getQuestion();
+        this.duration = poll.getDuration();
+        this.positiveAnswer = poll.getPositiveAnswer();
+        this.negativeAnswer = poll.getNegativeAnswer();
+        this.positiveVotes = poll.getPositiveVotes();
+        this.negativeVotes = poll.getNegativeVotes();
 
+        pollManager = new PollManager(plugin);
+    }
+
+    public Poll(IOSteinPolls plugin) {
+        pollManager = new PollManager(plugin);
     }
 
     public Player getCreator() {
@@ -61,35 +76,56 @@ public final class Poll {
         return negativeVotes;
     }
 
+    public int getTaskID() {
+        return taskID;
+    }
+
+    public void setTaskID(int taskID) {
+        this.taskID = taskID;
+    }
+
     public void setCreator(Player creator) {
         this.creator = creator;
-        pollManager.setCreator(this, creator);
+
+        if (creator != null) {
+            pollManager.setCreator(this, creator);
+        }
     }
 
     public void setQuestion(String question) {
         this.question = question;
-        pollManager.setQuestion(this, question);
+
+        if (question != null) {
+            pollManager.setQuestion(this, question);
+        }
     }
 
     public void setDuration(int duration) {
         this.duration = duration;
-        pollManager.setDuration(this, duration);
+
+
     }
 
     public void setPositiveAnswer(String positiveAnswer) {
         this.positiveAnswer = positiveAnswer;
-        pollManager.setPositiveAnswer(this, positiveAnswer);
+
+        if (positiveAnswer != null) {
+            pollManager.setPositiveAnswer(this, positiveAnswer);
+
+        }
     }
 
     public void setNegativeAnswer(String negativeAnswer) {
         this.negativeAnswer = negativeAnswer;
-        pollManager.setNegativeAnswer(this, negativeAnswer);
+        if (negativeAnswer != null) {
+            pollManager.setNegativeAnswer(this, negativeAnswer);
+
+        }
 
     }
 
     public void setPositiveVotes(int positiveVotes) {
         this.positiveVotes = positiveVotes;
-        pollManager.setPositiveVotes(this, positiveVotes);
 
     }
 
@@ -104,16 +140,17 @@ public final class Poll {
 
     public void setOnlyTeamAccess(boolean onlyTeamAccess) {
         this.onlyTeamAccess = onlyTeamAccess;
+
         pollManager.setAccess(this, onlyTeamAccess);
     }
 
     public void addVote(boolean positive) {
         if (positive) {
             positiveVotes++;
-            pollManager.submitVote(this, true);
+            pollManager.submitVote(this, true, creator);
         } else {
             negativeVotes++;
-            pollManager.submitVote(this, false);
+            pollManager.submitVote(this, false, creator);
 
         }
     }
@@ -129,6 +166,11 @@ public final class Poll {
         this.negativeVotes = 0;
         this.onlyTeamAccess = false;
 
+    }
+
+    public void endVote() {
+        pollManager.endPoll(this);
+        Bukkit.getScheduler().cancelTask(taskID);
     }
 
 }

@@ -23,12 +23,12 @@ public class PollSubmissionInventory {
                 .setName(Component.empty())
                 .toItemStack();
 
-        ItemStack yes = new ItemBuilder(Material.LIME_TERRACOTTA)
+        ItemStack positive= new ItemBuilder(Material.LIME_TERRACOTTA)
                 .setName(LegacyComponentSerializer.legacy('§').deserialize("§aJa!").decoration(TextDecoration.ITALIC, false))
-                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§7Stimme hiermit für §a " +IOSteinPolls.getInstance().getCurrentPoll().getPositiveAnswer() + " §7ab"))
+                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§7Stimme hiermit für §a" +IOSteinPolls.getInstance().getCurrentPoll().getPositiveAnswer() + " §7ab"))
                 .toItemStack();
 
-        ItemStack no = new ItemBuilder(Material.RED_TERRACOTTA)
+        ItemStack negative = new ItemBuilder(Material.RED_TERRACOTTA)
                 .setName(LegacyComponentSerializer.legacy('§').deserialize("§cNein!").decoration(TextDecoration.ITALIC, false))
                 .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§7Stimme hiermit für §c" + IOSteinPolls.getInstance().getCurrentPoll().getNegativeAnswer() +" §7ab"))
                 .toItemStack();
@@ -42,8 +42,8 @@ public class PollSubmissionInventory {
             inventory.setItem(i, background);
         }
 
-        inventory.setItem(11, yes);
-        inventory.setItem(15, no);
+        inventory.setItem(11, positive);
+        inventory.setItem(15, negative);
         inventory.setItem(18, question);
 
         return inventory;

@@ -32,14 +32,12 @@ public class PollSubmissionInventoryListener implements Listener {
                 case LIME_TERRACOTTA -> {
                     event.setCancelled(true);
                     IOSteinPolls.getInstance().getCurrentPoll().addVote(true);
-                    IOSteinPolls.getInstance().getPollManager().submitVote(IOSteinPolls.getInstance().getCurrentPoll(), true);
                     player.closeInventory();
                     player.sendMessage("");
                                     }
                 case RED_TERRACOTTA -> {
                     event.setCancelled(true);
                     IOSteinPolls.getInstance().getCurrentPoll().addVote(false);
-                    IOSteinPolls.getInstance().getPollManager().submitVote(IOSteinPolls.getInstance().getCurrentPoll(), false);
 
                 }
             }

@@ -63,6 +63,11 @@ public class DatabaseProvider {
                     "(question TEXT, duration INTEGER,access INTEGER, creator TEXT,positive_answer TEXT, negative_answer TEXT, positive_votes INTEGER, negative_votes INTEGER, finished INTEGER)");
             preparedStatement.executeUpdate();
 
+            preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `players_voted` " +
+                    "(player TEXT)");
+
+            preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

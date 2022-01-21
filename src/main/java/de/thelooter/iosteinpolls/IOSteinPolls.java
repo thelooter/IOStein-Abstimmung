@@ -5,8 +5,9 @@ import com.comphenix.protocol.ProtocolManager;
 import de.thelooter.iosteinpolls.commands.pollcommand.PollCommand;
 import de.thelooter.iosteinpolls.commands.pollcommand.PollCommandCompleter;
 import de.thelooter.iosteinpolls.database.DatabaseProvider;
-import de.thelooter.iosteinpolls.events.InventoryEvents;
 import de.thelooter.iosteinpolls.events.PollCreateInventoryListener;
+import de.thelooter.iosteinpolls.events.PollResultInventoryListener;
+import de.thelooter.iosteinpolls.events.PollStatusInventoryListener;
 import de.thelooter.iosteinpolls.events.PollSubmissionInventoryListener;
 import de.thelooter.iosteinpolls.manager.PollManager;
 import de.thelooter.iosteinpolls.util.Poll;
@@ -25,6 +26,7 @@ public final class IOSteinPolls extends JavaPlugin {
     private Poll currentPoll;
     private Poll finishedPoll;
 
+
     private ProtocolManager manager;
 
     @Override
@@ -36,7 +38,7 @@ public final class IOSteinPolls extends JavaPlugin {
         connection = new DatabaseProvider().getConnection();
 
         pollManager = new PollManager(this);
-        currentPoll = new Poll();
+        currentPoll = new Poll(this);
 
         manager = ProtocolLibrary.getProtocolManager();
 
@@ -47,9 +49,10 @@ public final class IOSteinPolls extends JavaPlugin {
         getCommand("poll").setTabCompleter(new PollCommandCompleter());
 
         //Event Listener Registration
-        getServer().getPluginManager().registerEvents(new InventoryEvents(), this);
         getServer().getPluginManager().registerEvents(new PollCreateInventoryListener(), this);
         getServer().getPluginManager().registerEvents(new PollSubmissionInventoryListener(), this);
+        getServer().getPluginManager().registerEvents(new PollStatusInventoryListener(), this);
+        getServer().getPluginManager().registerEvents(new PollResultInventoryListener(), this);
 
 
     }
@@ -74,7 +77,17 @@ public final class IOSteinPolls extends JavaPlugin {
         return currentPoll;
     }
 
+    public Poll getFinishedPoll() {
+        return finishedPoll;
+    }
+
+    public void setFinishedPoll(Poll finishedPoll) {
+        this.finishedPoll = finishedPoll;
+    }
+
     public ProtocolManager getManager() {
         return manager;
     }
+
+
 }

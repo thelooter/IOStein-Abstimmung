@@ -73,7 +73,6 @@ public class SignMenu {
                 if (signLocation.equals(position.toLocation(event.getPlayer().getWorld()))) {
                     if (secondPage) {
                         IOSteinPolls.getInstance().getCurrentPoll().setNegativeAnswer(event.getPacket().getStringArrays().read(0)[0]);
-                        IOSteinPolls.getInstance().getPollManager().setNegativeAnswer(IOSteinPolls.getInstance().getCurrentPoll(), event.getPacket().getStringArrays().getValues().get(0)[0]);
                         player.sendBlockChange(position.toLocation(player.getWorld()), Material.AIR.createBlockData());
 
                         openInvs.remove(event.getPlayer());
@@ -85,7 +84,6 @@ public class SignMenu {
 
                     } else {
                         IOSteinPolls.getInstance().getCurrentPoll().setPositiveAnswer(event.getPacket().getStringArrays().read(0)[0]);
-                        IOSteinPolls.getInstance().getPollManager().setPositiveAnswer(IOSteinPolls.getInstance().getCurrentPoll(), event.getPacket().getStringArrays().getValues().get(0)[0]);
 
                         player.sendBlockChange(position.toLocation(player.getWorld()), Material.AIR.createBlockData());
 

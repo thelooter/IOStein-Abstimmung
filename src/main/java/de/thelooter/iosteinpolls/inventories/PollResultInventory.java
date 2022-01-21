@@ -4,6 +4,7 @@ import de.thelooter.iosteinpolls.IOSteinPolls;
 import de.thelooter.iosteinpolls.util.items.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,15 +13,15 @@ import org.bukkit.inventory.ItemStack;
 
 public class PollResultInventory {
 
-    private final TextComponent title = LegacyComponentSerializer.legacy('§').deserialize("§8» §eERGEBNIS");
+    private final TextComponent title = LegacyComponentSerializer.legacy('§').deserialize("§8» §e§lERGEBNIS");
 
     public void createPollResultInventory(Player player) {
 
-        int positiveVotes = IOSteinPolls.getInstance().getCurrentPoll().getPositiveVotes();
-        int negativeVotes = IOSteinPolls.getInstance().getCurrentPoll().getNegativeVotes();
+        int positiveVotes = IOSteinPolls.getInstance().getFinishedPoll().getPositiveVotes();
+        int negativeVotes = IOSteinPolls.getInstance().getFinishedPoll().getNegativeVotes();
 
-        String positiveAnswer = IOSteinPolls.getInstance().getCurrentPoll().getPositiveAnswer();
-        String negativeAnswer = IOSteinPolls.getInstance().getCurrentPoll().getNegativeAnswer();
+        String positiveAnswer = IOSteinPolls.getInstance().getFinishedPoll().getPositiveAnswer();
+        String negativeAnswer = IOSteinPolls.getInstance().getFinishedPoll().getNegativeAnswer();
 
         Inventory inventory = player.getServer().createInventory(player, 27, title);
 
@@ -33,27 +34,27 @@ public class PollResultInventory {
         }
 
         ItemStack positive = new ItemBuilder(Material.LIME_TERRACOTTA)
-                .setName(LegacyComponentSerializer.legacy('§').deserialize("§a§l➛ §e" + positiveAnswer))
+                .setName(LegacyComponentSerializer.legacy('§').deserialize("§a§l➛ §e" + positiveAnswer).decoration(TextDecoration.ITALIC,false))
                 .addLoreLine(Component.empty())
-                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§bStimmen:"))
-                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§b" + positiveVotes + "§eStimmen für §a" + positiveAnswer))
+                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§bStimmen:").decoration(TextDecoration.ITALIC,false))
+                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§b" + positiveVotes + " §eStimmen für §a" + positiveAnswer).decoration(TextDecoration.ITALIC,false))
                 .toItemStack();
 
         ItemStack negative = new ItemBuilder(Material.RED_TERRACOTTA)
-                .setName(LegacyComponentSerializer.legacy('§').deserialize("§c§l➛ " + negativeAnswer))
+                .setName(LegacyComponentSerializer.legacy('§').deserialize("§c§l➛ " + negativeAnswer).decoration(TextDecoration.ITALIC,false))
                 .addLoreLine(Component.empty())
-                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§bStimmen:"))
-                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§b" + negativeVotes + "§eStimmen für §a" + negativeAnswer))
+                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§bStimmen:").decoration(TextDecoration.ITALIC,false))
+                .addLoreLine(LegacyComponentSerializer.legacy('§').deserialize("§b" + negativeVotes + " §eStimmen für §a" + negativeAnswer).decoration(TextDecoration.ITALIC,false))
                 .toItemStack();
 
         ItemStack description = new ItemBuilder(Material.PAPER)
-                .setName(LegacyComponentSerializer.legacy('§').deserialize("§eSiehe hier das Ergebnis der Abstimmung ein"))
+                .setName(LegacyComponentSerializer.legacy('§').deserialize("§eSiehe hier das Ergebnis der Abstimmung ein").decoration(TextDecoration.ITALIC,false))
                 .toItemStack();
 
-        inventory.setItem(12, positive);
-        inventory.setItem(18, negative);
+        inventory.setItem(10, positive);
+        inventory.setItem(16, negative);
 
-        inventory.setItem(24, description);
+        inventory.setItem(22, description);
 
         player.openInventory(inventory);
     }
